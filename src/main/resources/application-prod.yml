@@ -40,3 +40,10 @@ knife4j:
   enable: true
   # 开启生产环境屏蔽
   production: true
+  # 开启Swagger的Basic认证功能,默认是false
+  basic:
+    enable: true
+    # Basic认证用户名
+    username: root
+    # Basic认证密码
+    password: 123456
