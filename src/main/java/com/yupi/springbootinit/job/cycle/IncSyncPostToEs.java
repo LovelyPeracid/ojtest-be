@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import cn.hutool.core.collection.CollUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
@@ -37,7 +37,7 @@ public class IncSyncPostToEs {
         // 查询近 5 分钟内的数据
         Date fiveMinutesAgoDate = new Date(new Date().getTime() - 5 * 60 * 1000L);
         List<Post> postList = postMapper.listPostWithDelete(fiveMinutesAgoDate);
-        if (CollectionUtils.isEmpty(postList)) {
+        if (CollUtil.isEmpty(postList)) {
             log.info("no inc post");
             return;
         }

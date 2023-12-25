@@ -32,7 +32,6 @@
 
 - Easy Excel 表格处理
 - Hutool 工具库
-- Gson 解析库
 - Apache Commons Lang3 工具类
 - Lombok 注解
 

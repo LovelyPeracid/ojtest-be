@@ -1,7 +1,6 @@
 package com.yupi.springbootinit.model.vo;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import cn.hutool.json.JSONUtil;
 import com.yupi.springbootinit.model.entity.Post;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,8 +16,6 @@ import org.springframework.beans.BeanUtils;
  */
 @Data
 public class PostVO implements Serializable {
-
-    private final static Gson GSON = new Gson();
 
     /**
      * id
@@ -93,9 +90,7 @@ public class PostVO implements Serializable {
         Post post = new Post();
         BeanUtils.copyProperties(postVO, post);
         List<String> tagList = postVO.getTagList();
-        if (tagList != null) {
-            post.setTags(GSON.toJson(tagList));
-        }
+        post.setTags(JSONUtil.toJsonStr(tagList));
         return post;
     }
 
@@ -111,8 +106,7 @@ public class PostVO implements Serializable {
         }
         PostVO postVO = new PostVO();
         BeanUtils.copyProperties(post, postVO);
-        postVO.setTagList(GSON.fromJson(post.getTags(), new TypeToken<List<String>>() {
-        }.getType()));
+        postVO.setTagList(JSONUtil.toList(post.getTags(), String.class));
         return postVO;
     }
 }
