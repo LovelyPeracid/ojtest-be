@@ -150,6 +150,22 @@ public class PostController {
     }
 
     /**
+     * 分页获取列表（仅管理员）
+     *
+     * @param postQueryRequest
+     * @return
+     */
+    @PostMapping("/list/page")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Page<Post>> listPostByPage(@RequestBody PostQueryRequest postQueryRequest) {
+        long current = postQueryRequest.getCurrent();
+        long size = postQueryRequest.getPageSize();
+        Page<Post> postPage = postService.page(new Page<>(current, size),
+                postService.getQueryWrapper(postQueryRequest));
+        return ResultUtils.success(postPage);
+    }
+
+    /**
      * 分页获取列表（封装类）
      *
      * @param postQueryRequest
