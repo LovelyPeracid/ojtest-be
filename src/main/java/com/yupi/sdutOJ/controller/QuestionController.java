@@ -10,10 +10,7 @@ import com.yupi.sdutOJ.common.ResultUtils;
 import com.yupi.sdutOJ.constant.UserConstant;
 import com.yupi.sdutOJ.exception.BusinessException;
 import com.yupi.sdutOJ.exception.ThrowUtils;
-import com.yupi.sdutOJ.model.dto.question.QuestionAddRequest;
-import com.yupi.sdutOJ.model.dto.question.QuestionEditRequest;
-import com.yupi.sdutOJ.model.dto.question.QuestionQueryRequest;
-import com.yupi.sdutOJ.model.dto.question.QuestionUpdateRequest;
+import com.yupi.sdutOJ.model.dto.question.*;
 import com.yupi.sdutOJ.model.entity.Question;
 import com.yupi.sdutOJ.model.entity.User;
 import com.yupi.sdutOJ.model.vo.QuestionVO;
@@ -115,6 +112,14 @@ public class QuestionController {
         Question question = new Question();
         BeanUtils.copyProperties(questionUpdateRequest, question);
         List<String> tags = questionUpdateRequest.getTags();
+        List<JudgeCase> judgeCase = questionUpdateRequest.getJudgeCase();
+        if(judgeCase!=null){
+            question.setJudgeCase(JSONUtil.toJsonStr(judgeCase));
+        }
+        JudgeConfig judgeConfig = questionUpdateRequest.getJudgeConfig();
+        if(judgeConfig!=null){
+            question.setJudgeConfig(JSONUtil.toJsonStr(judgeConfig));
+        }
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
         }
@@ -171,7 +176,7 @@ public class QuestionController {
      */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-            HttpServletRequest request) {
+                                                               HttpServletRequest request) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
         // 限制爬虫
@@ -190,7 +195,7 @@ public class QuestionController {
      */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
-            HttpServletRequest request) {
+                                                                 HttpServletRequest request) {
         if (questionQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -238,7 +243,13 @@ public class QuestionController {
         }
         Question question = new Question();
         BeanUtils.copyProperties(questionEditRequest, question);
-       String tags = questionEditRequest.getTags();
+        List<JudgeCase> judgeCase = questionEditRequest.getJudgeCase();
+        JudgeConfig judgeConfig = questionEditRequest.getJudgeConfig();
+        if (judgeConfig != null)
+            question.setJudgeConfig(JSONUtil.toJsonStr(judgeConfig));
+        if (judgeCase != null)
+            question.setJudgeCase(JSONUtil.toJsonStr(judgeCase));
+        List<String> tags = questionEditRequest.getTags();
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
         }

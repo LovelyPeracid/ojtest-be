@@ -10,6 +10,8 @@ import com.yupi.sdutOJ.model.entity.Question;
 import com.yupi.sdutOJ.model.entity.QuestionSubmit;
 
 import com.yupi.sdutOJ.model.entity.User;
+import com.yupi.sdutOJ.model.enums.QuestionSubmitLanguageEnum;
+import com.yupi.sdutOJ.model.enums.QuestionSubmitStatusEnum;
 import com.yupi.sdutOJ.service.QuestionService;
 import com.yupi.sdutOJ.service.QuestionSubmitService;
 import org.springframework.aop.framework.AopContext;
@@ -30,6 +32,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser) {
+        String language = questionSubmitAddRequest.getLanguage();
+        QuestionSubmitLanguageEnum enumByValue = QuestionSubmitLanguageEnum.getEnumByValue(language);
+        if(enumByValue==null){
+            throw  new BusinessException(ErrorCode.PARAMS_ERROR,"编程语言错误");
+        }
+
         Long questionId = questionSubmitAddRequest.getQuestionId();
         Question byId = questionService.getById(questionSubmitAddRequest.getQuestionId());
         if(byId==null){
@@ -44,9 +52,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         questionSubmit.setUserId(userId);
         questionSubmit.setQuestionId(questionId);
         questionSubmit.setCode(questionSubmitAddRequest.getCode());
-        questionSubmit.setLanguage(questionSubmitAddRequest.getLanguage());
+        questionSubmit.setLanguage(language);
 
-        questionSubmit.setStatus(0);
+        questionSubmit.setStatus(QuestionSubmitStatusEnum.WAITING.getValue());
         questionSubmit.setJudgeInfo("{}");
         boolean result = this.save(questionSubmit);
         if(!result){

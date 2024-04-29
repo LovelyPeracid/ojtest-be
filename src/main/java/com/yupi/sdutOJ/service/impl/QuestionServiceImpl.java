@@ -41,14 +41,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
-* @author 轩
-* @description 针对表【question(题目)】的数据库操作Service实现
-* @createDate 2024-04-26 19:55:07
-*/
+ * @author 轩
+ * @description 针对表【question(题目)】的数据库操作Service实现
+ * @createDate 2024-04-26 19:55:07
+ */
 @Service
 @Slf4j
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
-    implements QuestionService {
+        implements QuestionService {
     @Resource
     private UserService userService;
     @Resource
@@ -111,23 +111,22 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         String sortField = questionQueryRequest.getSortField();
         String sortOrder = questionQueryRequest.getSortOrder();
 
-        queryWrapper.like(StringUtils.isNotBlank(title),"title",title);
-        queryWrapper.like(StringUtils.isNotBlank(content),"content",content);
-        queryWrapper.like(StringUtils.isNotBlank(answer),"answer",answer);
-        if(CollectionUtil.isNotEmpty(tags)){
-            for(String tag:tags){
-                queryWrapper.like("tags","\""+tag+"\"");
+        queryWrapper.like(StringUtils.isNotBlank(title), "title", title);
+        queryWrapper.like(StringUtils.isNotBlank(content), "content", content);
+        queryWrapper.like(StringUtils.isNotBlank(answer), "answer", answer);
+        if (CollectionUtil.isNotEmpty(tags)) {
+            for (String tag : tags) {
+                queryWrapper.like("tags", "\"" + tag + "\"");
             }
         }
-        queryWrapper.eq((ObjectUtils.isNotEmpty(id)),"id",id);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(userId),"userId",userId);
-        queryWrapper.eq("isDelete",false);
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField),sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+        queryWrapper.eq((ObjectUtils.isNotEmpty(id)), "id", id);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        queryWrapper.eq("isDelete", false);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
-        return  queryWrapper;
+        return queryWrapper;
 
     }
-
 
 
     @Override
